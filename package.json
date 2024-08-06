@@ -17,6 +17,7 @@
         "@primevue/themes": "^4.0.4",
         "@vitejs/plugin-vue": "^5.1.2",
         "autoprefixer": "^10.4.20",
+        "chart.js": "^4.4.3",
         "postcss": "^8.4.41",
         "primeicons": "^7.0.0",
         "primevue": "^4.0.4",
