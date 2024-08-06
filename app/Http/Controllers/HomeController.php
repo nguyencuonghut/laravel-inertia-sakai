@@ -11,4 +11,9 @@ class HomeController extends Controller
     {
         return Inertia::render('Home');
     }
+
+    public function charts()
+    {
+        return Inertia::render('Charts');
+    }
 }
