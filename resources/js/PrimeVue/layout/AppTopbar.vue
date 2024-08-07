@@ -2,8 +2,13 @@
 import { useLayout } from '@/PrimeVue/layout/composables/layout';
 import AppConfigurator from './AppConfigurator.vue';
 import NavLink from "@/Components/NavLink.vue";
+import { router } from '@inertiajs/vue3'
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
+
+const logout = () => {
+    router.post('/logout')
+};
 </script>
 
 <template>
@@ -72,6 +77,10 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                     <button type="button" class="layout-topbar-action">
                         <i class="pi pi-user"></i>
                         <span>Profile</span>
+                    </button>
+                    <button @click="logout" type="button" class="layout-topbar-action">
+                        <i class="pi pi-sign-out"></i>
+                        <span>Logout</span>
                     </button>
                 </div>
             </div>

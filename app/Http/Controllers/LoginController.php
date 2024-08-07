@@ -36,4 +36,15 @@ class LoginController extends Controller
             'password' => 'Email hoặc mật khẩu không khớp!'
         ]);
     }
+
+    public function handleLogout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
 }
