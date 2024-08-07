@@ -1,5 +1,4 @@
 <script setup>
-import AppLayout from '@/PrimeVue/layout/AppLayout.vue';
 import { useLayout } from '@/PrimeVue/layout/composables/layout';
 import { onMounted, ref, watch } from 'vue';
 
@@ -229,44 +228,42 @@ watch(
 </script>
 
 <template>
-    <AppLayout>
-        <Fluid class="grid grid-cols-12 gap-8">
-            <div class="col-span-12 xl:col-span-6">
-                <div class="card">
-                    <div class="font-semibold text-xl mb-4">Linear</div>
-                    <Chart type="line" :data="lineData" :options="lineOptions"></Chart>
-                </div>
+    <Fluid class="grid grid-cols-12 gap-8">
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card">
+                <div class="font-semibold text-xl mb-4">Linear</div>
+                <Chart type="line" :data="lineData" :options="lineOptions"></Chart>
             </div>
-            <div class="col-span-12 xl:col-span-6">
-                <div class="card">
-                    <div class="font-semibold text-xl mb-4">Bar</div>
-                    <Chart type="bar" :data="barData" :options="barOptions"></Chart>
-                </div>
+        </div>
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card">
+                <div class="font-semibold text-xl mb-4">Bar</div>
+                <Chart type="bar" :data="barData" :options="barOptions"></Chart>
             </div>
-            <div class="col-span-12 xl:col-span-6">
-                <div class="card flex flex-col items-center">
-                    <div class="font-semibold text-xl mb-4">Pie</div>
-                    <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
-                </div>
+        </div>
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card flex flex-col items-center">
+                <div class="font-semibold text-xl mb-4">Pie</div>
+                <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
             </div>
-            <div class="col-span-12 xl:col-span-6">
-                <div class="card flex flex-col items-center">
-                    <div class="font-semibold text-xl mb-4">Doughnut</div>
-                    <Chart type="doughnut" :data="pieData" :options="pieOptions"></Chart>
-                </div>
+        </div>
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card flex flex-col items-center">
+                <div class="font-semibold text-xl mb-4">Doughnut</div>
+                <Chart type="doughnut" :data="pieData" :options="pieOptions"></Chart>
             </div>
-            <div class="col-span-12 xl:col-span-6">
-                <div class="card flex flex-col items-center">
-                    <div class="font-semibold text-xl mb-4">Polar Area</div>
-                    <Chart type="polarArea" :data="polarData" :options="polarOptions"></Chart>
-                </div>
+        </div>
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card flex flex-col items-center">
+                <div class="font-semibold text-xl mb-4">Polar Area</div>
+                <Chart type="polarArea" :data="polarData" :options="polarOptions"></Chart>
             </div>
-            <div class="col-span-12 xl:col-span-6">
-                <div class="card flex flex-col items-center">
-                    <div class="font-semibold text-xl mb-4">Radar</div>
-                    <Chart type="radar" :data="radarData" :options="radarOptions"></Chart>
-                </div>
+        </div>
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card flex flex-col items-center">
+                <div class="font-semibold text-xl mb-4">Radar</div>
+                <Chart type="radar" :data="radarData" :options="radarOptions"></Chart>
             </div>
-        </Fluid>
-    </AppLayout>
+        </div>
+    </Fluid>
 </template>

@@ -16,6 +16,12 @@ const submit = () => {
 };
 </script>
 
+<script>
+export default {
+    layout: null
+};
+</script>
+
 <template>
     <FloatingConfigurator />
     <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
