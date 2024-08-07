@@ -1,5 +1,6 @@
 <template>
     <AppLayout>
+        <h1>{{ user.name }}</h1>
         <div class="grid grid-cols-12 gap-8">
         <div class="col-span-12 lg:col-span-6 xl:col-span-3">
             <div class="card mb-0">
@@ -259,6 +260,12 @@ const items = ref([
     { label: 'Add New', icon: 'pi pi-fw pi-plus' },
     { label: 'Remove', icon: 'pi pi-fw pi-trash' }
 ]);
+
+defineProps({
+    user: {
+        type: Object,
+    },
+});
 
 onMounted(() => {
     ProductService.getProductsSmall().then((data) => (products.value = data));

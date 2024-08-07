@@ -7,7 +7,9 @@ const { toggleDarkMode, isDarkTheme } = useLayout();
 
 <template>
     <div class="fixed flex gap-4 top-8 right-8">
-        <Button type="button" @click="toggleDarkMode" rounded :icon="{ 'pi pi-moon': isDarkTheme, 'pi pi-sun': !isDarkTheme }" severity="secondary" />
+        <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
+            <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
+        </button>
         <div class="relative">
             <Button
                 icon="pi pi-palette"
