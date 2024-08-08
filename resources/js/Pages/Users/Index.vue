@@ -58,7 +58,7 @@
             <div class="flex flex-col gap-6">
                 <div>
                     <label for="name" class="block font-bold mb-3">Tên</label>
-                    <InputText id="name" v-model.trim="user.name" required="true" autofocus :invalid="submitted && !user.name" fluid />
+                    <InputText id="name" v-model="user.name" required="true" autofocus :invalid="submitted && !user.name" fluid />
                     <small v-if="submitted && !user.name" class="text-red-500">Bạn phải điền tên.</small>
                 </div>
                 <div>
@@ -120,8 +120,7 @@ import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
-import { router } from '@inertiajs/vue3';
-import { reactive } from 'vue'
+import { useForm } from '@inertiajs/vue3';
 
 const toast = useToast();
 const dt = ref();
@@ -130,7 +129,7 @@ const users = computed(() => page.props.users);
 const userDialog = ref(false);
 const deleteUserDialog = ref(false);
 const deleteUsersDialog = ref(false);
-const user = reactive({
+const user = useForm({
     id: '',
     name: '',
     email: '',
@@ -156,7 +155,9 @@ const saveUser = () => {
 
     if (user.id) {
         // Edit this User
-        router.put(`users/${user.id}`, user);
+        user.put(`users/${user.id}`, user, {
+            onFinish: () => user.reset(),
+        });
         toast.add({severity:'success', summary: 'Successful', detail: 'Cập nhật thành công', life: 3000});
     }
     else {
@@ -176,10 +177,10 @@ const confirmDeleteUser = (usr) => {
     deleteUserDialog.value = true;
 };
 const deleteUser = () => {
-    router.delete(`users/${user.id}`);
+    user.delete(`users/${user.id}`, {
+            onFinish: () => user.reset(),
+        });
     deleteUserDialog.value = false;
-    // Reset user
-    resetUser(user);
     toast.add({severity:'success', summary: 'Successful', detail: 'Xóa người dùng thành công', life: 3000});
 };
 
@@ -190,12 +191,6 @@ const setUser = (usr) => {
     user.status = usr.status;
 }
 
-const resetUser = (usr) => {
-    usr.id = '';
-    usr.name = '';
-    usr.email = '';
-    usr.status = '';
-}
 const findIndexById = (id) => {
     let index = -1;
     for (let i = 0; i < users.value.length; i++) {
