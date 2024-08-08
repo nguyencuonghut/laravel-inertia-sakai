@@ -43,7 +43,7 @@ const username = computed(() => page.props.auth.user.username)
                     </g>
                 </svg>
 
-                <span>SAKAI - {{ username}}</span>
+                <span>{{ username}}</span>
             </NavLink>
         </div>
 
