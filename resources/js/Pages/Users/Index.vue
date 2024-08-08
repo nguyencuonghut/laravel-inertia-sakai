@@ -115,24 +115,24 @@
             <div class="flex items-center gap-4">
                 <i class="pi pi-exclamation-triangle !text-3xl" />
                 <span v-if="user"
-                    >Are you sure you want to delete <b>{{ user.name }}</b
+                    >Bạn chắc chắn muốn xóa <b>{{ user.name }}</b
                     >?</span
                 >
             </div>
             <template #footer>
-                <Button label="No" icon="pi pi-times" text @click="deleteUserDialog = false" />
-                <Button label="Yes" icon="pi pi-check" @click="deleteUser" />
+                <Button label="Không" icon="pi pi-times" text @click="deleteUserDialog = false" />
+                <Button label="Có" icon="pi pi-check" @click="deleteUser" />
             </template>
         </Dialog>
 
         <Dialog v-model:visible="deleteUsersDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
             <div class="flex items-center gap-4">
                 <i class="pi pi-exclamation-triangle !text-3xl" />
-                <span v-if="user">Are you sure you want to delete the selected users?</span>
+                <span v-if="user">Bạn chắc chắn muốn xóa những người đã chọn?</span>
             </div>
             <template #footer>
-                <Button label="No" icon="pi pi-times" text @click="deleteUsersDialog = false" />
-                <Button label="Yes" icon="pi pi-check" text @click="deleteSelectedUsers" />
+                <Button label="Không" icon="pi pi-times" text @click="deleteUsersDialog = false" />
+                <Button label="Có" icon="pi pi-check" text @click="deleteSelectedUsers" />
             </template>
         </Dialog>
 	</div>
@@ -144,6 +144,8 @@ import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
+import { reactive } from 'vue'
 
 const toast = useToast();
 const dt = ref();
@@ -152,7 +154,12 @@ const users = computed(() => page.props.users);
 const userDialog = ref(false);
 const deleteUserDialog = ref(false);
 const deleteUsersDialog = ref(false);
-const user = ref({});
+const user = reactive({
+    id: '',
+    name: '',
+    email: '',
+    status: '',
+});
 const selectedUsers = ref();
 const filters = ref({
     'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
@@ -204,16 +211,27 @@ const editUser = (prod) => {
     user.value = {...prod};
     userDialog.value = true;
 };
-const confirmDeleteUser = (prod) => {
-    user.value = prod;
+const confirmDeleteUser = (usr) => {
+    user.id = usr.id;
+    user.name = usr.name;
+    user.email = usr.email;
+    user.status = usr.status;
     deleteUserDialog.value = true;
 };
 const deleteUser = () => {
-    users.value = users.value.filter(val => val.id !== user.value.id);
+    router.delete(`users/${user.id}`);
     deleteUserDialog.value = false;
-    user.value = {};
-    toast.add({severity:'success', summary: 'Successful', detail: 'User Deleted', life: 3000});
+    // Reset user
+    resetUser(user);
+    toast.add({severity:'success', summary: 'Successful', detail: 'Xóa người dùng thành công', life: 3000});
 };
+
+const resetUser = (usr) => {
+    usr.id = '';
+    usr.name = '';
+    usr.email = '';
+    usr.status = '';
+}
 const findIndexById = (id) => {
     let index = -1;
     for (let i = 0; i < users.value.length; i++) {
