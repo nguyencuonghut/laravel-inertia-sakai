@@ -3,12 +3,19 @@ import { useLayout } from '@/PrimeVue/layout/composables/layout';
 import AppConfigurator from './AppConfigurator.vue';
 import NavLink from "@/Components/NavLink.vue";
 import { router } from '@inertiajs/vue3'
+import { computed } from 'vue'
+import { usePage } from '@inertiajs/vue3'
+
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
 const logout = () => {
     router.post('/logout')
 };
+
+const page = usePage();
+const username = computed(() => page.props.auth.user.username)
+
 </script>
 
 <template>
@@ -36,7 +43,7 @@ const logout = () => {
                     </g>
                 </svg>
 
-                <span>SAKAI</span>
+                <span>SAKAI - {{ username}}</span>
             </NavLink>
         </div>
 
