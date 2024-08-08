@@ -153,20 +153,22 @@ const hideDialog = () => {
 const saveUser = () => {
     submitted.value = true;
 
-    if (user.id) {
-        // Edit this User
-        user.put(`users/${user.id}`, user, {
-            onFinish: () => user.reset(),
-        });
-        toast.add({severity:'success', summary: 'Successful', detail: 'Cập nhật thành công', life: 3000});
-    }
-    else {
-        // Creat new User
-        toast.add({severity:'success', summary: 'Successful', detail: 'Tạo mới thành công', life: 3000});
-    }
+    if(user?.name?.trim() && user?.email) {
+        if (user.id) {
+            // Edit this User
+            user.put(`users/${user.id}`, user, {
+                onFinish: () => user.reset(),
+            });
+            toast.add({severity:'success', summary: 'Successful', detail: 'Cập nhật thành công', life: 3000});
+        }
+        else {
+            // Creat new User
+            toast.add({severity:'success', summary: 'Successful', detail: 'Tạo mới thành công', life: 3000});
+        }
 
-    userDialog.value = false;
-    user.value = {};
+        userDialog.value = false;
+        user.value = {};
+    }
 };
 const editUser = (usr) => {
     setUser(usr);
