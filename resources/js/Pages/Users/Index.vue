@@ -54,60 +54,36 @@
             </DataTable>
         </div>
 
-        <Dialog v-model:visible="userDialog" :style="{ width: '450px' }" header="Chi tiết người dùng" :modal="true">
+        <Dialog v-model:visible="userDialog" :style="{ width: '450px' }" header="Sửa người dùng" :modal="true">
             <div class="flex flex-col gap-6">
-                <img v-if="user.image" :src="`https://primefaces.org/cdn/primevue/images/user/${user.image}`" :alt="user.image" class="block m-auto pb-4" />
                 <div>
-                    <label for="name" class="block font-bold mb-3">Name</label>
+                    <label for="name" class="block font-bold mb-3">Tên</label>
                     <InputText id="name" v-model.trim="user.name" required="true" autofocus :invalid="submitted && !user.name" fluid />
-                    <small v-if="submitted && !user.name" class="text-red-500">Name is required.</small>
+                    <small v-if="submitted && !user.name" class="text-red-500">Bạn phải điền tên.</small>
                 </div>
                 <div>
-                    <label for="description" class="block font-bold mb-3">Description</label>
-                    <Textarea id="description" v-model="user.description" required="true" rows="3" cols="20" fluid />
+                    <label for="email" class="block font-bold mb-3">Email</label>
+                    <InputText id="email" v-model.trim="user.email" required="true" autofocus :invalid="submitted && !user.email" fluid />
+                    <small v-if="submitted && !user.email" class="text-red-500">Bạn phải điền email.</small>
                 </div>
                 <div>
-                    <label for="inventoryStatus" class="block font-bold mb-3">Inventory Status</label>
-                    <Select id="inventoryStatus" v-model="user.inventoryStatus" :options="statuses" optionLabel="label" placeholder="Select a Status" fluid></Select>
-                </div>
-
-                <div>
-                    <span class="block font-bold mb-4">Category</span>
+                    <span class="block font-bold mb-4">Trạng thái</span>
                     <div class="grid grid-cols-12 gap-4">
                         <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category1" v-model="user.category" name="category" value="Accessories" />
-                            <label for="category1">Accessories</label>
+                            <RadioButton id="status_on" v-model="user.status" value="On" name="category"/>
+                            <label for="status_on">ON</label>
                         </div>
                         <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category2" v-model="user.category" name="category" value="Clothing" />
-                            <label for="category2">Clothing</label>
+                            <RadioButton id="status_off" v-model="user.status" value="Off" name="category"/>
+                            <label for="status_off">OFF</label>
                         </div>
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category3" v-model="user.category" name="category" value="Electronics" />
-                            <label for="category3">Electronics</label>
-                        </div>
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category4" v-model="user.category" name="category" value="Fitness" />
-                            <label for="category4">Fitness</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-6">
-                        <label for="price" class="block font-bold mb-3">Price</label>
-                        <InputNumber id="price" v-model="user.price" mode="currency" currency="USD" locale="en-US" fluid />
-                    </div>
-                    <div class="col-span-6">
-                        <label for="quantity" class="block font-bold mb-3">Quantity</label>
-                        <InputNumber id="quantity" v-model="user.quantity" integeronly fluid />
                     </div>
                 </div>
             </div>
 
             <template #footer>
-                <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
-                <Button label="Save" icon="pi pi-check" @click="saveUser" />
+                <Button label="Hủy" icon="pi pi-times" text @click="hideDialog" />
+                <Button label="Lưu" icon="pi pi-check" @click="saveUser" />
             </template>
         </Dialog>
 
@@ -165,17 +141,7 @@ const filters = ref({
     'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
 });
 const submitted = ref(false);
-const statuses = ref([
-    {label: 'INSTOCK', value: 'instock'},
-    {label: 'LOWSTOCK', value: 'lowstock'},
-    {label: 'OUTOFSTOCK', value: 'outofstock'}
-]);
 
-const formatCurrency = (value) => {
-    if(value)
-        return value.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
-    return;
-};
 const openNew = () => {
     user.value = {};
     submitted.value = false;
@@ -188,34 +154,25 @@ const hideDialog = () => {
 const saveUser = () => {
     submitted.value = true;
 
-    if (user?.value.name?.trim()) {
-        if (user.value.id) {
-            user.value.inventoryStatus = user.value.inventoryStatus.value ? user.value.inventoryStatus.value : user.value.inventoryStatus;
-            user.value[findIndexById(user.value.id)] = user.value;
-            toast.add({severity:'success', summary: 'Successful', detail: 'User Updated', life: 3000});
-        }
-        else {
-            user.value.id = createId();
-            user.value.code = createId();
-            user.value.image = 'user-placeholder.svg';
-            user.value.inventoryStatus = user.value.inventoryStatus ? user.value.inventoryStatus.value : 'INSTOCK';
-            users.value.push(user.value);
-            toast.add({severity:'success', summary: 'Successful', detail: 'User Created', life: 3000});
-        }
-
-        userDialog.value = false;
-        user.value = {};
+    if (user.id) {
+        // Edit this User
+        router.put(`users/${user.id}`, user);
+        toast.add({severity:'success', summary: 'Successful', detail: 'Cập nhật thành công', life: 3000});
     }
+    else {
+        // Creat new User
+        toast.add({severity:'success', summary: 'Successful', detail: 'Tạo mới thành công', life: 3000});
+    }
+
+    userDialog.value = false;
+    user.value = {};
 };
-const editUser = (prod) => {
-    user.value = {...prod};
+const editUser = (usr) => {
+    setUser(usr);
     userDialog.value = true;
 };
 const confirmDeleteUser = (usr) => {
-    user.id = usr.id;
-    user.name = usr.name;
-    user.email = usr.email;
-    user.status = usr.status;
+    setUser(usr);
     deleteUserDialog.value = true;
 };
 const deleteUser = () => {
@@ -225,6 +182,13 @@ const deleteUser = () => {
     resetUser(user);
     toast.add({severity:'success', summary: 'Successful', detail: 'Xóa người dùng thành công', life: 3000});
 };
+
+const setUser = (usr) => {
+    user.id = usr.id;
+    user.name = usr.name;
+    user.email = usr.email;
+    user.status = usr.status;
+}
 
 const resetUser = (usr) => {
     usr.id = '';

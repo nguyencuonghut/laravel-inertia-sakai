@@ -59,7 +59,29 @@ class UsersController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $rules = [
+            'name' => 'required',
+            'email' => 'required|unique:users,email,'.$id,
+            'status' => 'required',
+        ];
+
+        $messages = [
+            'name.required' => 'Bạn phải nhập tên.',
+            'email.required' => 'Bạn phải nhập email.',
+            'email.unique' => 'Email bị trùng với người dùng khác.',
+            'status.required' => 'Bạn phải nhập trạng thái',
+        ];
+
+        $request->validate($rules, $messages);
+
+        $user = User::findOrFail($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->status = $request->status;
+        $user->save();
+
+        return redirect('/users');
+
     }
 
     /**
