@@ -12,6 +12,7 @@ const model = ref([
         label: 'UI Components',
         items: [
             { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', to: '/charts' },
+            { label: 'Người dùng', icon: 'pi pi-fw pi-user', to: '/users' },
         ]
     },
 ]);
