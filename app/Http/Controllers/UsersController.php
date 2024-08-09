@@ -35,7 +35,33 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'name' => 'required',
+            'email' => 'required|unique:users,email',
+            'status' => 'required',
+            'password' => 'required|confirmed|min:6',
+        ];
+
+        $messages = [
+            'name.required' => 'Bạn phải nhập tên.',
+            'email.required' => 'Bạn phải nhập email.',
+            'email.unique' => 'Email bị trùng với người dùng khác.',
+            'status.required' => 'Bạn phải nhập trạng thái',
+            'password.required' => 'Bạn phải nhập mật khẩu.',
+            'password.min' => 'Mật khẩu phải dài ít nhất 6 ký tự.',
+            'password.confirmed' => 'Mật khẩu không khớp.',
+        ];
+
+        $request->validate($rules, $messages);
+
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->status = $request->status;
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return redirect('/users');
     }
 
     /**
@@ -81,7 +107,6 @@ class UsersController extends Controller
         $user->save();
 
         return redirect('/users');
-
     }
 
     /**

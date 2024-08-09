@@ -3,7 +3,7 @@
         <div class="card">
             <Toolbar class="mb-6">
                 <template #start>
-                    <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
+                    <Button label="Thêm" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" @click="confirmDeleteSelected" :disabled="!selectedUsers || !selectedUsers.length" />
                 </template>
 
@@ -54,7 +54,7 @@
             </DataTable>
         </div>
 
-        <Dialog v-model:visible="userDialog" :style="{ width: '450px' }" header="Sửa người dùng" :modal="true">
+        <Dialog v-model:visible="userDialog" :style="{ width: '450px' }" header="Chi tiết người dùng" :modal="true">
             <div class="flex flex-col gap-6">
                 <div>
                     <label for="name" class="block font-bold mb-3">Tên</label>
@@ -65,6 +65,17 @@
                     <label for="email" class="block font-bold mb-3">Email</label>
                     <InputText id="email" v-model.trim="user.email" required="true" autofocus :invalid="submitted && !user.email" fluid />
                     <small v-if="submitted && !user.email" class="text-red-500">Bạn phải điền email.</small>
+                    {{ user.email }}
+                </div>
+                <div v-if="isAddUser">
+                    <label for="password" class="block font-bold mb-3">Mật khẩu</label>
+                    <Password id="password" v-model.trim="user.password" required="true" autofocus :invalid="submitted && !user.password" fluid />
+                    <small v-if="submitted && !user.password" class="text-red-500">Bạn phải điền mật khẩu.</small>
+                </div>
+                <div v-if="isAddUser">
+                    <label for="password_confirmation" class="block font-bold mb-3">Xác nhận mật khẩu</label>
+                    <Password id="password_confirmation" v-model.trim="user.password_confirmation" required="true" autofocus :invalid="submitted && !user.password_confirmation" fluid />
+                    <small v-if="submitted && !user.password_confirmation" class="text-red-500">Bạn phải xác nhận mật khẩu.</small>
                 </div>
                 <div>
                     <span class="block font-bold mb-4">Trạng thái</span>
@@ -78,6 +89,7 @@
                             <label for="status_off">OFF</label>
                         </div>
                     </div>
+                    <small v-if="submitted && !user.status" class="text-red-500">Bạn phải chọn trạng thái.</small>
                 </div>
             </div>
 
@@ -134,17 +146,21 @@ const user = useForm({
     name: '',
     email: '',
     status: '',
+    password: '',
+    password_confirmation: '',
 });
 const selectedUsers = ref();
 const filters = ref({
     'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
 });
 const submitted = ref(false);
+const isAddUser = ref(false);
 
 const openNew = () => {
-    user.value = {};
+    user.reset();
     submitted.value = false;
     userDialog.value = true;
+    isAddUser.value = true;
 };
 const hideDialog = () => {
     userDialog.value = false;
@@ -153,26 +169,43 @@ const hideDialog = () => {
 const saveUser = () => {
     submitted.value = true;
 
-    if(user?.name?.trim() && user?.email) {
-        if (user.id) {
+    // Add new User
+    if (isAddUser.value) {
+        // Check condition of input
+        if(user?.name?.trim()
+            && user?.email
+            && user?.password
+            && user?.password_confirmation) {
+            // Creat new User
+            user.post('users', user, {
+                onFinish: () => user.reset(),
+            });
+
+            isAddUser.value = false;
+            toast.add({severity:'success', summary: 'Successful', detail: 'Tạo mới thành công', life: 3000});
+
+            userDialog.value = false;
+            user.reset();
+        }
+    } else {
+        // Edit this User
+        if(user?.name?.trim() && user?.email) {
             // Edit this User
             user.put(`users/${user.id}`, user, {
                 onFinish: () => user.reset(),
             });
             toast.add({severity:'success', summary: 'Successful', detail: 'Cập nhật thành công', life: 3000});
-        }
-        else {
-            // Creat new User
-            toast.add({severity:'success', summary: 'Successful', detail: 'Tạo mới thành công', life: 3000});
+
+            userDialog.value = false;
+            user.reset();
         }
 
-        userDialog.value = false;
-        user.value = {};
     }
 };
 const editUser = (usr) => {
     setUser(usr);
     userDialog.value = true;
+    isAddUser.value = false;
 };
 const confirmDeleteUser = (usr) => {
     setUser(usr);
