@@ -38,9 +38,9 @@
                 </template>
 
                 <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
-                <Column field="name" header="Name" sortable style="min-width: 16rem"></Column>
+                <Column field="name" header="Tên" sortable style="min-width: 16rem"></Column>
                 <Column field="email" header="Email" sortable style="min-width: 16rem"></Column>
-                <Column field="status" header="Status" sortable style="min-width: 12rem">
+                <Column field="status" header="Trạng thái" sortable style="min-width: 12rem">
                     <template #body="slotProps">
                         <Tag :value="slotProps.data.status" :severity="getStatusLabel(slotProps.data.status)" />
                     </template>
