@@ -119,4 +119,17 @@ class UsersController extends Controller
         $user->destroy($id);
         return redirect('/users');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $users = $request->users;
+        foreach ($users as $user) {
+            $deleted_user = User::findOrFail($user['id']);
+            if ($deleted_user) {
+                $deleted_user->destroy($deleted_user->id);
+            }
+        }
+
+        return redirect('/users');
+    }
 }

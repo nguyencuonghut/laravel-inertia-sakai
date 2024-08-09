@@ -4,7 +4,7 @@
             <Toolbar class="mb-6">
                 <template #start>
                     <Button label="Thêm" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" @click="confirmDeleteSelected" :disabled="!selectedUsers || !selectedUsers.length" />
+                    <Button label="Xóa" icon="pi pi-trash" severity="danger" @click="confirmDeleteSelected" :disabled="!selectedUsers || !selectedUsers.length" />
                 </template>
 
                 <template #end>
@@ -38,6 +38,7 @@
                 </template>
 
                 <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+                <Column field="id" header="Id" sortable style="min-width: 16rem"></Column>
                 <Column field="name" header="Tên" sortable style="min-width: 16rem"></Column>
                 <Column field="email" header="Email" sortable style="min-width: 16rem"></Column>
                 <Column field="status" header="Trạng thái" sortable style="min-width: 12rem">
@@ -133,6 +134,7 @@ import { useToast } from 'primevue/usetoast';
 import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3'
 
 const toast = useToast();
 const dt = ref();
@@ -226,36 +228,18 @@ const setUser = (usr) => {
     user.status = usr.status;
 }
 
-const findIndexById = (id) => {
-    let index = -1;
-    for (let i = 0; i < users.value.length; i++) {
-        if (users.value[i].id === id) {
-            index = i;
-            break;
-        }
-    }
-
-    return index;
-};
-const createId = () => {
-    let id = '';
-    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for ( var i = 0; i < 5; i++ ) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
-}
 const exportCSV = () => {
     dt.value.exportCSV();
 };
 const confirmDeleteSelected = () => {
     deleteUsersDialog.value = true;
 };
+
 const deleteSelectedUsers = () => {
-    users.value = users.value.filter(val => !selectedUsers.value.includes(val));
+    router.post('users/bulkDelete', {users : selectedUsers.value });
     deleteUsersDialog.value = false;
     selectedUsers.value = null;
-    toast.add({severity:'success', summary: 'Successful', detail: 'Users Deleted', life: 3000});
+    toast.add({severity:'success', summary: 'Successful', detail: 'Xóa người dùng thành công', life: 3000});
 };
 
 const getStatusLabel = (status) => {

@@ -16,4 +16,5 @@ Route::group(['middleware'=>'auth:web'], function() {
     Route::get('/', [HomeController::class, 'index']);
     Route::get('/charts', [HomeController::class, 'charts']);
     Route::resource('/users', UsersController::class);
+    Route::post('/users/bulkDelete', [UsersController::class, 'bulkDelete']);
 });
