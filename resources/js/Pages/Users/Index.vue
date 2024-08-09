@@ -139,6 +139,7 @@ import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 import { router } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3';
 
 const toast = useToast();
 const dt = ref();

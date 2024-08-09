@@ -249,6 +249,7 @@
 import { useLayout } from '@/PrimeVue/layout/composables/layout';
 import { ProductService } from '@/PrimeVue/service/ProductService';
 import { onMounted, ref, watch } from 'vue';
+import { Head } from '@inertiajs/vue3';
 
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
 

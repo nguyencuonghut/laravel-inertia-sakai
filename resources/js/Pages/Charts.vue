@@ -1,5 +1,6 @@
 <script setup>
 import { useLayout } from '@/PrimeVue/layout/composables/layout';
+import { Head } from '@inertiajs/vue3';
 import { onMounted, ref, watch } from 'vue';
 
 const { getPrimary, getSurface, isDarkTheme } = useLayout();

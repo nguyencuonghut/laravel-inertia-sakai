@@ -2,6 +2,7 @@
 import FloatingConfigurator from '@/PrimeVue/components/FloatingConfigurator.vue';
 import InputError from '@/Components/InputError.vue';
 import { useForm } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 
 const form = useForm({
     email: '',
