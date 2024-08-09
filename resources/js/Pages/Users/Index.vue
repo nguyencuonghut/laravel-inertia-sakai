@@ -1,4 +1,8 @@
 <template>
+    <Head>
+        <title>Tất cả người dùng</title>
+    </Head>
+
     <div>
         <div class="card">
             <Toolbar class="mb-6">

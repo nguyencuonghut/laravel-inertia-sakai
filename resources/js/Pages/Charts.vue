@@ -228,6 +228,10 @@ watch(
 </script>
 
 <template>
+    <Head>
+        <title>Biểu đồ</title>
+    </Head>
+
     <Fluid class="grid grid-cols-12 gap-8">
         <div class="col-span-12 xl:col-span-6">
             <div class="card">

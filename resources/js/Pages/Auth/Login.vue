@@ -23,6 +23,10 @@ export default {
 </script>
 
 <template>
+    <Head>
+        <title>Đăng nhập</title>
+    </Head>
+
     <FloatingConfigurator />
     <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
         <div class="flex flex-col items-center justify-center">
