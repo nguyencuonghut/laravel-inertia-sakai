@@ -64,3 +64,10 @@ const isOutsideClicked = (event) => {
     </div>
     <Toast />
 </template>
+
+<style type="text/css">
+    .required-field::after {
+        content: " *";
+        color: red;
+    }
+</style>

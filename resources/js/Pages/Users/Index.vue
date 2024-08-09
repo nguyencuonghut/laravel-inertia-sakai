@@ -62,28 +62,27 @@
         <Dialog v-model:visible="userDialog" :style="{ width: '450px' }" header="Chi tiết người dùng" :modal="true">
             <div class="flex flex-col gap-6">
                 <div>
-                    <label for="name" class="block font-bold mb-3">Tên</label>
-                    <InputText id="name" v-model="user.name" required="true" autofocus :invalid="submitted && !user.name" fluid />
+                    <label for="name" class="block font-bold mb-3 required-field">Tên</label>
+                    <InputText id="name" v-model="user.name" autofocus :invalid="submitted && !user.name" fluid />
                     <small v-if="submitted && !user.name" class="text-red-500">Bạn phải điền tên.</small>
                 </div>
                 <div>
-                    <label for="email" class="block font-bold mb-3">Email</label>
+                    <label for="email" class="block font-bold mb-3 required-field">Email</label>
                     <InputText id="email" v-model.trim="user.email" required="true" autofocus :invalid="submitted && !user.email" fluid />
                     <small v-if="submitted && !user.email" class="text-red-500">Bạn phải điền email.</small>
-                    {{ user.email }}
                 </div>
                 <div v-if="isAddUser">
-                    <label for="password" class="block font-bold mb-3">Mật khẩu</label>
+                    <label for="password" class="block font-bold mb-3 required-field">Mật khẩu</label>
                     <Password id="password" v-model.trim="user.password" required="true" autofocus :invalid="submitted && !user.password" fluid />
                     <small v-if="submitted && !user.password" class="text-red-500">Bạn phải điền mật khẩu.</small>
                 </div>
                 <div v-if="isAddUser">
-                    <label for="password_confirmation" class="block font-bold mb-3">Xác nhận mật khẩu</label>
+                    <label for="password_confirmation" class="block font-bold mb-3 required-field">Xác nhận mật khẩu</label>
                     <Password id="password_confirmation" v-model.trim="user.password_confirmation" required="true" autofocus :invalid="submitted && !user.password_confirmation" fluid />
                     <small v-if="submitted && !user.password_confirmation" class="text-red-500">Bạn phải xác nhận mật khẩu.</small>
                 </div>
                 <div>
-                    <span class="block font-bold mb-4">Trạng thái</span>
+                    <span class="block font-bold mb-4 required-field">Trạng thái</span>
                     <div class="grid grid-cols-12 gap-4">
                         <div class="flex items-center gap-2 col-span-6">
                             <RadioButton id="status_on" v-model="user.status" value="On" name="category"/>
@@ -143,7 +142,7 @@ import { Head } from '@inertiajs/vue3';
 
 const toast = useToast();
 const dt = ref();
-const page = usePage();;
+const page = usePage();
 const users = computed(() => page.props.users);
 const userDialog = ref(false);
 const deleteUserDialog = ref(false);
