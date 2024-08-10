@@ -204,12 +204,12 @@ const saveUser = () => {
         if(form?.name?.trim() && form?.email) {
             // Edit this User
             form.put(`users/${form.id}`, {
-                onFinish: () => form.reset(),
+                onSuccess: () => {
+                    form.reset();
+                    userDialog.value = false;
+                    toast.add({severity:'success', summary: 'Successful', detail: 'Cập nhật thành công', life: 3000});
+                },
             });
-            toast.add({severity:'success', summary: 'Successful', detail: 'Cập nhật thành công', life: 3000});
-
-            userDialog.value = false;
-            form.reset();
         }
 
     }
