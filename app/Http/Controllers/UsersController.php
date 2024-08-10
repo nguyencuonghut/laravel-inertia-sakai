@@ -127,14 +127,18 @@ class UsersController extends Controller
 
     public function bulkDelete(Request $request)
     {
-        $users = $request->users;
-        foreach ($users as $user) {
-            $deleted_user = User::findOrFail($user['id']);
-            if ($deleted_user) {
-                $deleted_user->destroy($deleted_user->id);
+        if ('Quản trị' == Auth::user()->role) {
+            $users = $request->users;
+            foreach ($users as $user) {
+                $deleted_user = User::findOrFail($user['id']);
+                if ($deleted_user) {
+                    $deleted_user->destroy($deleted_user->id);
+                }
             }
-        }
 
-        return redirect('/users');
+            return redirect('/users');
+        } else {
+            return redirect('/users')->withErrors('err_message', 'Bạn không có quyền xóa');
+        }
     }
 }

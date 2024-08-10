@@ -254,10 +254,18 @@ const confirmDeleteSelected = () => {
 };
 
 const deleteSelectedUsers = () => {
-    router.post('users/bulkDelete', {users : selectedUsers.value });
-    deleteUsersDialog.value = false;
-    selectedUsers.value = null;
-    toast.add({severity:'success', summary: 'Successful', detail: 'Xóa người dùng thành công', life: 3000});
+    router.post('users/bulkDelete', {users : selectedUsers.value }, {
+        onSuccess: () => {
+            deleteUsersDialog.value = false;
+            selectedUsers.value = null;
+            toast.add({severity:'success', summary: 'Successful', detail: 'Xóa người dùng thành công', life: 3000});
+        },
+        onError: () => {
+            deleteUsersDialog.value = false;
+            selectedUsers.value = null;
+            toast.add({severity:'error', summary: 'Failed', detail: 'Bạn không có quyền xóa', life: 3000});
+        },
+    });
 };
 
 const getStatusLabel = (status) => {
