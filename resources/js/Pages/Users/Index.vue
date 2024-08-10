@@ -45,6 +45,7 @@
                 <Column field="id" header="Id" sortable style="min-width: 16rem"></Column>
                 <Column field="name" header="Tên" sortable style="min-width: 16rem"></Column>
                 <Column field="email" header="Email" sortable style="min-width: 16rem"></Column>
+                <Column field="role" header="Quyền" sortable style="min-width: 12rem"></Column>
                 <Column field="status" header="Trạng thái" sortable style="min-width: 12rem">
                     <template #body="slotProps">
                         <Tag :value="slotProps.data.status" :severity="getStatusLabel(slotProps.data.status)" />

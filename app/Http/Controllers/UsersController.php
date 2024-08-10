@@ -14,7 +14,7 @@ class UsersController extends Controller
     public function index()
     {
         $users = User::orderBy('id', 'desc')->get()->map(function ($user) {
-            return collect($user)->only(['id', 'name', 'email', 'status']);
+            return collect($user)->only(['id', 'name', 'email', 'status', 'role']);
         });
 
         return Inertia::render('Users/Index', [
