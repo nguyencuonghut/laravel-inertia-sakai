@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class UsersController extends Controller
@@ -114,10 +115,14 @@ class UsersController extends Controller
      */
     public function destroy(string $id)
     {
-        $user = User::findOrFail($id);
+        if ('Quản trị' == Auth::user()->role) {
+            $user = User::findOrFail($id);
 
-        $user->destroy($id);
-        return redirect('/users');
+            $user->destroy($id);
+            return redirect('/users');
+        } else {
+            return redirect('/users')->withErrors('err_message', 'Bạn không có quyền xóa');
+        }
     }
 
     public function bulkDelete(Request $request)

@@ -42,11 +42,10 @@
                 </template>
 
                 <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
-                <Column field="id" header="Id" sortable style="min-width: 16rem"></Column>
                 <Column field="name" header="Tên" sortable style="min-width: 16rem"></Column>
                 <Column field="email" header="Email" sortable style="min-width: 16rem"></Column>
                 <Column field="role" header="Quyền" sortable style="min-width: 12rem"></Column>
-                <Column field="status" header="Trạng thái" sortable style="min-width: 12rem">
+                <Column field="status" header="Trạng thái" sortable>
                     <template #body="slotProps">
                         <Tag :value="slotProps.data.status" :severity="getStatusLabel(slotProps.data.status)" />
                     </template>
@@ -225,12 +224,19 @@ const confirmDeleteUser = (usr) => {
     setUser(usr);
     deleteUserDialog.value = true;
 };
+
 const deleteUser = () => {
     form.delete(`users/${form.id}`, {
-            onFinish: () => form.reset(),
-        });
-    deleteUserDialog.value = false;
-    toast.add({severity:'success', summary: 'Successful', detail: 'Xóa người dùng thành công', life: 3000});
+        onSuccess: () => {
+            form.reset();
+            deleteUserDialog.value = false;
+            toast.add({severity:'success', summary: 'Successful', detail: 'Xóa người dùng thành công', life: 3000});
+        },
+        onError: () => {
+            deleteUserDialog.value = false;
+            toast.add({severity:'error', summary: 'Failed', detail: 'Bạn không có quyền xóa', life: 3000});
+        },
+    });
 };
 
 const setUser = (usr) => {
