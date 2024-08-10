@@ -69,19 +69,19 @@
                 </div>
                 <div>
                     <label for="email" class="block font-bold mb-3 required-field">Email</label>
-                    <InputText id="email" v-model.trim="form.email" required="true" autofocus :invalid="submitted && !form.email" fluid />
+                    <InputText id="email" v-model.trim="form.email" autofocus :invalid="submitted && !form.email" fluid />
                     <small v-if="submitted && !form.email" class="text-red-500">Bạn phải điền email.</small>
                     <small v-if="submitted && errors.email" class="text-red-500">{{ errors.email }}</small>
                 </div>
                 <div v-if="isAddUser">
                     <label for="password" class="block font-bold mb-3 required-field">Mật khẩu</label>
-                    <Password id="password" v-model.trim="form.password" required="true" autofocus :invalid="submitted && !form.password" fluid />
+                    <Password id="password" v-model.trim="form.password" autofocus :invalid="submitted && !form.password" fluid />
                     <small v-if="submitted && !form.password" class="text-red-500">Bạn phải điền mật khẩu.</small>
                     <small v-if="submitted && errors.password" class="text-red-500">{{ errors.password }}</small>
                 </div>
                 <div v-if="isAddUser">
                     <label for="password_confirmation" class="block font-bold mb-3 required-field">Xác nhận mật khẩu</label>
-                    <Password id="password_confirmation" v-model.trim="form.password_confirmation" required="true" autofocus :invalid="submitted && !form.password_confirmation" fluid />
+                    <Password id="password_confirmation" v-model.trim="form.password_confirmation" autofocus :invalid="submitted && !form.password_confirmation" fluid />
                     <small v-if="submitted && !form.password_confirmation" class="text-red-500">Bạn phải xác nhận mật khẩu.</small>
                 </div>
                 <div>
