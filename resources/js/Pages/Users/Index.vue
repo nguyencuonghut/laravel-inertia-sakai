@@ -18,16 +18,16 @@
             </Toolbar>
 
             <DataTable
-                ref="dt"
-                v-model:selection="selectedUsers"
+                v-model:filters="filters"
                 :value="users"
-                dataKey="id"
-                :paginator="true"
+                paginator
                 :rows="10"
-                :filters="filters"
+                dataKey="id"
+                filterDisplay="row"
+                :globalFilterFields="['name', 'email', 'role', 'status']"
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                 :rowsPerPageOptions="[5, 10, 25]"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users"
+                currentPageReportTemplate="Hiển thị từ {first} đến {last} của {totalRecords} người dùng"
             >
                 <template #header>
                     <div class="flex flex-wrap gap-2 items-center justify-between">
@@ -41,13 +41,44 @@
                     </div>
                 </template>
 
-                <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
-                <Column field="name" header="Tên" sortable style="min-width: 16rem"></Column>
-                <Column field="email" header="Email" sortable style="min-width: 16rem"></Column>
-                <Column field="role" header="Quyền" sortable style="min-width: 12rem"></Column>
+                <Column field="name" header="Tên" sortable style="min-width: 16rem">
+                    <template #body="{ data }">
+                        {{ data.name }}
+                    </template>
+                    <template #filter="{ filterModel, filterCallback }">
+                        <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Tìm theo tên" />
+                    </template>
+                </Column>
+                <Column field="email" header="Email" sortable style="min-width: 16rem">
+                    <template #body="{ data }">
+                        {{ data.email }}
+                    </template>
+                    <template #filter="{ filterModel, filterCallback }">
+                        <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Tìm theo email" />
+                    </template>
+                </Column>
+                <Column field="role" header="Quyền" sortable style="min-width: 12rem">
+                    <template #body="slotProps">
+                        <Tag :value="slotProps.data.role" :severity="getRolesLabel(slotProps.data.role)" />
+                    </template>
+                    <template #filter="{ filterModel, filterCallback }">
+                        <Select v-model="filterModel.value" @change="filterCallback()" :options="roles" placeholder="Chọn quyền" style="min-width: 12rem" :showClear="true">
+                            <template #option="slotProps">
+                                <Tag :value="slotProps.option" :severity="getRolesLabel(slotProps.option)" />
+                            </template>
+                        </Select>
+                    </template>
+                </Column>
                 <Column field="status" header="Trạng thái" sortable>
                     <template #body="slotProps">
                         <Tag :value="slotProps.data.status" :severity="getStatusLabel(slotProps.data.status)" />
+                    </template>
+                    <template #filter="{ filterModel, filterCallback }">
+                        <Select v-model="filterModel.value" @change="filterCallback()" :options="statuses" placeholder="Chọn trạng thái" style="min-width: 12rem" :showClear="true">
+                            <template #option="slotProps">
+                                <Tag :value="slotProps.option" :severity="getStatusLabel(slotProps.option)" />
+                            </template>
+                        </Select>
                     </template>
                 </Column>
                 <Column :exportable="false" style="min-width: 12rem">
@@ -138,20 +169,17 @@
 import { ref } from 'vue';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
-import { computed } from 'vue';
-import { usePage } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 import { router } from '@inertiajs/vue3'
 import { Head } from '@inertiajs/vue3';
 
 const toast = useToast();
 const dt = ref();
-const page = usePage();
-const users = computed(() => page.props.users);
 defineProps({
     errors: {
         type: Object,
     },
+    users: Object,
 });
 const userDialog = ref(false);
 const deleteUserDialog = ref(false);
@@ -165,11 +193,18 @@ const form = useForm({
     password_confirmation: null,
 });
 const selectedUsers = ref();
+
 const filters = ref({
-    'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    email: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    role: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    status: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 const submitted = ref(false);
 const isAddUser = ref(false);
+const roles = ref(['Quản trị', 'Người dùng']);
+const statuses = ref(['On', 'Off']);
 
 const openNew = () => {
     form.reset();
@@ -266,6 +301,19 @@ const deleteSelectedUsers = () => {
             toast.add({severity:'error', summary: 'Failed', detail: 'Bạn không có quyền xóa', life: 3000});
         },
     });
+};
+
+const getRolesLabel = (role) => {
+    switch (role) {
+        case 'Quản trị':
+            return 'success';
+
+        case 'Người dùng':
+            return 'info';
+
+        default:
+            return null;
+    }
 };
 
 const getStatusLabel = (status) => {
